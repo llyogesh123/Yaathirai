@@ -1,0 +1,919 @@
+{
+  "info": {
+    "name": "Yaathirai Backend API",
+    "description": "Complete API collection for Yaathirai cultural discovery platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "challenge_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "submission_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "artisan_submission_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.token);",
+                  "    pm.collectionVariables.set('user_id', response.user.id);",
+                  "    pm.test('Registration successful', function () {",
+                  "        pm.expect(response.message).to.equal('User registered successfully');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Artisan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"artisan_user\",\n  \"email\": \"artisan@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"artisan\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_user\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.token);",
+                  "    pm.collectionVariables.set('user_id', response.user.id);",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.expect(response.message).to.equal('Login successful');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"bio\": \"Cultural enthusiast and learner\",\n    \"country\": \"India\",\n    \"interests\": [\"cooking\", \"art\", \"music\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Challenges",
+      "item": [
+        {
+          "name": "Get All Challenges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/challenges",
+              "host": ["{{base_url}}"],
+              "path": ["challenges"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Today's Challenge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/challenges/today",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "today"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Challenge by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Challenges by Region",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/challenges/region/Tamil Nadu",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "region", "Tamil Nadu"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Challenges by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/challenges/category/cooking",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "category", "cooking"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Challenge (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('challenge_id', response.challenge._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Make Traditional Sambar\",\n  \"region\": \"Tamil Nadu\",\n  \"country\": \"India\",\n  \"date\": \"2024-01-15T00:00:00.000Z\",\n  \"description\": \"Learn to make authentic South Indian sambar with traditional spices and vegetables\",\n  \"videoEmbedUrl\": \"https://www.youtube.com/embed/dQw4w9WgXcQ\",\n  \"difficulty\": \"intermediate\",\n  \"category\": \"cooking\",\n  \"materials\": [\n    {\n      \"name\": \"Toor dal\",\n      \"quantity\": \"1 cup\",\n      \"optional\": false\n    },\n    {\n      \"name\": \"Tamarind\",\n      \"quantity\": \"lemon-sized ball\",\n      \"optional\": false\n    },\n    {\n      \"name\": \"Drumsticks\",\n      \"quantity\": \"4-5 pieces\",\n      \"optional\": true\n    }\n  ],\n  \"steps\": [\n    {\n      \"stepNumber\": 1,\n      \"instruction\": \"Soak tamarind in warm water for 30 minutes\",\n      \"timeEstimate\": 30\n    },\n    {\n      \"stepNumber\": 2,\n      \"instruction\": \"Cook toor dal in pressure cooker with turmeric\",\n      \"timeEstimate\": 15\n    }\n  ],\n  \"tags\": [\"traditional\", \"vegetarian\", \"south-indian\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/challenges",
+              "host": ["{{base_url}}"],
+              "path": ["challenges"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Challenge (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Make Traditional Sambar - Updated\",\n  \"description\": \"Updated description for the sambar challenge\",\n  \"difficulty\": \"beginner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Challenge (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Submissions",
+      "item": [
+        {
+          "name": "Create Submission",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('submission_id', response.submission._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengeId\": \"{{challenge_id}}\",\n  \"mediaUrl\": \"https://example.com/my-sambar-photo.jpg\",\n  \"mediaType\": \"image\",\n  \"caption\": \"My first attempt at making traditional sambar! It was delicious.\",\n  \"rating\": 4,\n  \"feedback\": \"The recipe was easy to follow, but I would add more vegetables next time.\",\n  \"isPublic\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/submissions",
+              "host": ["{{base_url}}"],
+              "path": ["submissions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Submissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/submissions/user",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Submissions by Challenge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/submissions/challenge/{{challenge_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "challenge", "{{challenge_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Submission by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/submissions/{{submission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "{{submission_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Like Submission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/submissions/{{submission_id}}/like",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "{{submission_id}}", "like"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike Submission",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/submissions/{{submission_id}}/like",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "{{submission_id}}", "like"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment to Submission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Great work! Your sambar looks delicious. Thanks for sharing the recipe modifications!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/submissions/{{submission_id}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "{{submission_id}}", "comments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Submission",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/submissions/{{submission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["submissions", "{{submission_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Artisan Submissions",
+      "item": [
+        {
+          "name": "Create Artisan Submission",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('artisan_submission_id', response.submission._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengeReference\": \"Traditional Tanjore Painting\",\n  \"title\": \"Learn Tanjore Painting Basics\",\n  \"description\": \"Complete guide to creating your first Tanjore painting with gold leaf work and traditional techniques\",\n  \"videoEmbedUrl\": \"https://www.youtube.com/embed/dQw4w9WgXcQ\",\n  \"region\": \"Tamil Nadu\",\n  \"category\": \"art\",\n  \"difficulty\": \"intermediate\",\n  \"materials\": [\n    {\n      \"name\": \"Canvas board\",\n      \"quantity\": \"1 piece (12x10 inches)\",\n      \"optional\": false\n    },\n    {\n      \"name\": \"Gold leaf sheets\",\n      \"quantity\": \"5-6 sheets\",\n      \"optional\": false\n    },\n    {\n      \"name\": \"Acrylic paints\",\n      \"quantity\": \"Basic color set\",\n      \"optional\": false\n    }\n  ],\n  \"estimatedTime\": 240,\n  \"businessInfo\": {\n    \"name\": \"Tamil Art Studio\",\n    \"website\": \"https://tamilartstudio.com\",\n    \"socialMedia\": {\n      \"instagram\": \"@tamilartstudio\",\n      \"youtube\": \"TamilArtStudio\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Artisan's Submissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/my",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "my"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Artisan Submissions (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions?status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Artisan Submission by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/{{artisan_submission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "{{artisan_submission_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Artisan Submission",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Learn Tanjore Painting Basics - Updated\",\n  \"description\": \"Updated description with more detailed instructions\",\n  \"estimatedTime\": 300\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/{{artisan_submission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "{{artisan_submission_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Artisan Submission (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\",\n  \"adminNotes\": \"Excellent content quality. Approved for featuring.\",\n  \"scheduledDate\": \"2024-01-20T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/{{artisan_submission_id}}/review",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "{{artisan_submission_id}}", "review"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Artisan Submission (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rejected\",\n  \"adminNotes\": \"Video quality needs improvement. Please resubmit with better resolution.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/{{artisan_submission_id}}/review",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "{{artisan_submission_id}}", "review"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Artisan Submission",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/artisans/submissions/{{artisan_submission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["artisans", "submissions", "{{artisan_submission_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/stats",
+              "host": ["{{base_url}}"],
+              "path": ["users", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/leaderboard?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["users", "leaderboard"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Activity Calendar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/calendar?year=2024",
+              "host": ["{{base_url}}"],
+              "path": ["users", "calendar"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2024"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Badges (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"badges\": [\"first_challenge\", \"week_warrior\", \"culture_explorer\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/badges",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}", "badges"]
+            }
+          },
+          "response": []
+        },
+        {
+  "name": "Deactivate User (Admin)",
+  "request": {
+    "method": "PUT",
+    "header": [
+      {
+        "key": "Authorization",
+        "value": "Bearer {{jwt_token}}"
+      },
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": {
+      "mode": "raw",
+      "raw": "{\n  \"active\": false\n}"
+    },
+    "url": {
+      "raw": "{{base_url}}/users/{{user_id}}/deactivate",
+      "host": ["{{base_url}}"],
+      "path": ["users", "{{user_id}}", "deactivate"]
+    }
+  },
+  "response": []
+}
+      ]
+    }
+  ]
+}
